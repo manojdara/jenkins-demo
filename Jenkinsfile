@@ -5,38 +5,29 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                echo 'Source code is available in the workspace'
-                checkout scm
+                echo 'Source code checked out successfully'
             }
         }
 
         stage('Check Python') {
             steps {
-                sh 'python3 --version'
+                bat 'python --version'
             }
         }
 
-        stage('Test') {
+        stage('Run Tests') {
             steps {
-                sh 'python3 -m unittest -v'
-            }
-        }
-
-        stage('Package') {
-            steps {
-                sh 'zip -j calculator-demo.zip calculator.py test_calculator.py'
-                archiveArtifacts artifacts: 'calculator-demo.zip',
-                                 fingerprint: true
+                bat 'python -m unittest -v'
             }
         }
     }
 
     post {
         success {
-            echo 'Pipeline completed successfully!'
+            echo 'SUCCESS: All tests passed!'
         }
         failure {
-            echo 'Pipeline failed. Check the console output.'
+            echo 'FAILURE: Check the console output.'
         }
     }
 }
